@@ -15,8 +15,9 @@ class DogMe:
             resp = urllib2.urlopen(req)
             data = json.loads(resp.read())
             for child in data['data']['children']:
-                images = child['data']['preview']['images']
-                self.dogs_cache.append(images[0]['source']['url'])
+                if 'preview' in child['data']:
+                    images = child['data']['preview']['images']
+                    self.dogs_cache.append(images[0]['source']['url'])
         image_url = random.choice(self.dogs_cache)
         attachments = attachments = [{"title": image_url, "image_url": image_url}]
         return None,attachments

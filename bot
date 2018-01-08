@@ -7,7 +7,7 @@ import inspect
 import time
 from slackclient import SlackClient
 
-BOT_NAME = 'ccbot'
+BOT_NAME = 'ccbot-jr'
 commands = {}
 slack_client = SlackClient(os.environ.get('SLACK_CODE_CAMP_BOT_TOKEN'))
 
@@ -45,7 +45,7 @@ def parse_slack_output(slack_rtm_output):
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output:
-                return output['text'], output['channel']
+                return output['text'].strip(), output['channel']
 
     return None, None
 
