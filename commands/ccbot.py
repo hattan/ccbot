@@ -1,6 +1,4 @@
-import urllib
-import json
-import random
+import datetime
 
 class CCBot:
     cats_url = "https://api.github.com/repos/flores/moarcats/contents/cats?ref=master"
@@ -10,8 +8,16 @@ class CCBot:
         return "all"
 
     def invoke(self, input):
+        text = None
+        attachements = None
         command,action,args= self.parse_command(input)
-        return "ok you want me to " + action,None
+        method_name = "action_" + action
+        if method_name in dir(CCBot):
+            method_to_call = getattr(self, method_name)
+            result = method_to_call(args)
+            text = result
+
+        return text,attachements
 
     def get_command(self):
         return "ccbot"
@@ -29,3 +35,11 @@ class CCBot:
                 args.append(argument)
             count = count + 1
         return command,action,args
+
+#CCBot actions in the format "ccbot <action> <args>"
+#All actions receive an args array with any data passed in
+    def action_get_time(self,args):
+        return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    def action_schedule(self,args):
+        return "https://www.socalcodecamp.com/schedule.aspx"
