@@ -10,7 +10,7 @@ class GoatMe:
     def get_channel_id(self):
         return "all"
 
-    def invoke(self):
+    def invoke(self, command):
         if not self.cache:
             req = urllib2.Request(self.url)
             req.add_header('User-Agent', 'codecamp-bot')

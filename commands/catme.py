@@ -9,7 +9,7 @@ class CatMe:
     def get_channel_id(self):
         return "all"
 
-    def invoke(self):
+    def invoke(self, command):
         if self.cats_cache is None:
             response = urllib.urlopen(self.cats_url)
             data = json.loads(response.read())

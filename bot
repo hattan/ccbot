@@ -26,19 +26,22 @@ def load_commands():
             if handler_class and inspect.isclass(handler_class):
                 commands[handler_class().get_command()]=handler_class()
                 
-def handle_command(command, channel):
-    if command in commands:
-        action = commands[command]
-        actionChannel = action.get_channel_id()
+def handle_command(input, channel):
+    if not input is '':
+        parts = input.split(' ')
+        command = parts[0]
+        if command in commands:
+            action = commands[command]
+            actionChannel = action.get_channel_id()
 
-        if (actionChannel == "all") or (channel == action.get_channel_id()):
-            text,attachments = action.invoke()
-            if text is not None:
-                slack_client.api_call("chat.postMessage", channel=channel,text=text, as_user=True)
-            else:
-                slack_client.api_call("chat.postMessage", channel=channel,
-                    text="",
-                    attachments=attachments, as_user=True)
+            if (actionChannel == "all") or (channel == action.get_channel_id()):
+                text,attachments = action.invoke(input)
+                if text is not None:
+                    slack_client.api_call("chat.postMessage", channel=channel,text=text, as_user=True)
+                else:
+                    slack_client.api_call("chat.postMessage", channel=channel,
+                        text="",
+                        attachments=attachments, as_user=True)
 
 def parse_slack_output(slack_rtm_output):
     output_list = slack_rtm_output
