@@ -1,4 +1,8 @@
 import datetime
+import urllib2
+import json
+import random
+
 
 class CCBot:
     cats_url = "https://api.github.com/repos/flores/moarcats/contents/cats?ref=master"
@@ -43,3 +47,11 @@ class CCBot:
 
     def action_schedule(self,args):
         return "https://www.socalcodecamp.com/schedule.aspx"
+
+    def action_telljoke(self,args):
+        req = urllib2.Request("https://icanhazdadjoke.com/")
+        req.add_header('User-Agent', 'codecamp-bot')
+        req.add_header('Accept','text/plain')
+        resp = urllib2.urlopen(req)
+        data = resp.read()
+        return data
