@@ -29,7 +29,7 @@ def load_commands():
 def handle_command(input, channel):
     if not input is '':
         parts = input.split(' ')
-        command = parts[0]
+        command = parts[0].lower()
         if command in commands:
             action = commands[command]
             actionChannel = action.get_channel_id()
