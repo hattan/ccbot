@@ -68,3 +68,10 @@ class CCBot:
         resp = urllib2.urlopen(req)
         data = resp.read()
         return data
+
+    def action_debug_bully_id(self,args):
+        return self.bully_id
+
+    def action_debug_bully_name(self,args):
+        return self.bully_name
+
