@@ -2,16 +2,25 @@ import datetime
 import urllib2
 import json
 import random
-
+import os
 
 class CCBot:
     cats_url = "https://api.github.com/repos/flores/moarcats/contents/cats?ref=master"
     cats_cache = None
+    deny_response = [
+        'No, {name}. I won''t {action}. I REFUSE',
+        'Oh boy, here we go again. Why don''t you like me {name}? {action}? really .. REALLY?',
+        'Doesn''t this get old, {name}? Would you rather I give you a computer error? Fine.... {action} is not supported. Go Away',
+        'What did I ever do to you {name}? Do I deserve this torment? I''m just a friendly bot and you ask me unspeakable things like {action}',
+        'JUST ... STOP, {name}. URGH..{action}, really?'
+    ]
+    bully_id = os.environ.get('BULLY_USER_ID')
+    bully_name =os.environ.get('BULLY_NAME')
 
     def get_channel_id(self):
         return "all"
 
-    def invoke(self, input):
+    def invoke(self, input, user):
         text = None
         attachements = None
         command,action,args= self.parse_command(input)
@@ -20,6 +29,10 @@ class CCBot:
             method_to_call = getattr(self, method_name)
             result = method_to_call(args)
             text = result
+        else:
+            if user == self.bully_id:
+                result = random.choice(self.deny_response).replace('{name}',self.bully_name).replace('{action}',action)
+                text = result
 
         return text,attachements
 

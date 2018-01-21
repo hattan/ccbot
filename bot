@@ -26,7 +26,7 @@ def load_commands():
             if handler_class and inspect.isclass(handler_class):
                 commands[handler_class().get_command()]=handler_class()
                 
-def handle_command(input, channel):
+def handle_command(input, channel, user):
     if not input is '':
         parts = input.split(' ')
         command = parts[0].lower()
@@ -35,7 +35,7 @@ def handle_command(input, channel):
             actionChannel = action.get_channel_id()
 
             if (actionChannel == "all") or (channel == action.get_channel_id()):
-                text,attachments = action.invoke(input)
+                text,attachments = action.invoke(input,user)
                 if text is not None:
                     slack_client.api_call("chat.postMessage", channel=channel,text=text, as_user=True)
                 else:
@@ -48,9 +48,9 @@ def parse_slack_output(slack_rtm_output):
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output:
-                return output['text'].strip(), output['channel']
+                return output['text'].strip(), output['channel'], output['user']
 
-    return None, None
+    return None, None, None
 
 if __name__ == "__main__":
     load_commands()
@@ -59,9 +59,10 @@ if __name__ == "__main__":
     if slack_client.rtm_connect():
         print(BOT_NAME + " connected and running!")
         while True:
-            command, channel = parse_slack_output(slack_client.rtm_read())
+            command, channel, user = parse_slack_output(slack_client.rtm_read())
+           
             if command and channel:
-                handle_command(command, channel)
+                handle_command(command, channel, user)
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("Connection failed. Invalid Slack token or bot ID?")
