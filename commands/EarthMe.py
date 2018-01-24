@@ -3,14 +3,13 @@ import json
 import random
 
 class EarthMe:
-
     def get_info(self):
         url = "https://epic.gsfc.nasa.gov/api/images.php"
         req = urllib2.Request(url)
         req.add_header('User-Agent', 'codecamp-bot')
         resp = urllib2.urlopen(req)
         data = json.loads(resp.read())
-        image_data = data[0]
+        image_data = random.choice(data)
         return image_data
 
     def get_channel_id(self):
