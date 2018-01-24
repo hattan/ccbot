@@ -17,13 +17,18 @@ class Xkcd:
         return data
 
     def invoke(self, input, user):
+        info = self.fetch_info()
+        last_comic_id = info["num"]
+
         command,args= self.parse_command(input)
         comic_id = None
         if(len(args) > 0):
-            comic_id = args[0]
-
-        info = self.fetch_info()
-        last_comic_id = info["num"]
+            command = str(args[0])
+            if command.isalpha() and command == "latest":
+                comic_id = last_comic_id
+            else:
+                comic_id = args[0]
+                
         random_comic = comic_id if comic_id is not None else random.randint(0, last_comic_id)
         comic_data = self.fetch_info(random_comic)
         attachments = attachments = [{"title": comic_data["title"], "text": comic_data["alt"],"image_url":  comic_data["img"]}]
