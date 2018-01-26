@@ -1,8 +1,7 @@
 # ccbot
 SoCal Code Camp Slack bot
 
-### Adding new Commands 
-Installation:
+### Installation
 
 In order to use ccbot with slack, you need to create a [slack app](https://api.slack.com/apps?new_app=1). After creating an app, you need to get you API Token. That token needs to be added to an environment variable named 'SLACK_CODE_CAMP_BOT_TOKEN'
 
