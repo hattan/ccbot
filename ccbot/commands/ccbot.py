@@ -2,6 +2,7 @@ import datetime
 import random
 import os
 from services.api_client import ApiClient
+from services.slack_response import SlackResponse
 
 class CCBot:
     deny_response = [
@@ -23,7 +24,6 @@ class CCBot:
 
     def invoke(self, input, user):
         text = None
-        attachements = None
         command,action,args= self.parse_command(input)
         method_name = "action_" + action
         if method_name in dir(CCBot):
@@ -35,7 +35,7 @@ class CCBot:
                 result = random.choice(self.deny_response).replace('{name}',self.bully_name).replace('{action}',action)
                 text = result
 
-        return text,attachements
+        return SlackResponse.text(text)
 
     def get_command(self):
         return "ccbot"

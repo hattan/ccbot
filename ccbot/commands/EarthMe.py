@@ -1,5 +1,6 @@
 import random
 from services.api_client import ApiClient
+from services.slack_response import SlackResponse
 
 class EarthMe:
     api_client = None
@@ -26,7 +27,8 @@ class EarthMe:
         author_name = lat + " " + lng + " (location map)"
         author_link = maps_url
         attachments = attachments = [{"pretext": pretext, "text":  text , "image_url": image_url, "author_name": author_name, "author_link": author_link}]
-        return None,attachments
+        
+        return SlackResponse.attachment(pretext=pretext,text=text,image_url=image_url,author_name=author_name,author_link=author_link)
 
     def get_command(self):
         return "earthme"

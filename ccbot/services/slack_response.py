@@ -21,10 +21,10 @@ class SlackResponse:
             attachment['text'] = text      
 
         if author_name is not None:
-            attachment['author_name'] = image_url      
+            attachment['author_name'] = author_name      
 
         if author_link is not None:
-            attachment['author_link'] = image_url      
+            attachment['author_link'] = author_link      
 
         return None,[attachment]
 

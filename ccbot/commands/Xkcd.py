@@ -1,5 +1,6 @@
 import random
 from services.api_client import ApiClient
+from services.slack_response import SlackResponse
 
 class Xkcd:
     api_client = None
@@ -30,8 +31,7 @@ class Xkcd:
                 
         random_comic = comic_id if comic_id is not None else random.randint(0, last_comic_id)
         comic_data = self.fetch_info(random_comic)
-        attachments = attachments = [{"title": comic_data["title"], "text": comic_data["alt"],"image_url":  comic_data["img"]}]
-        return None,attachments
+        return SlackResponse.attachment(title=comic_data["title"],text=comic_data["alt"],image_url=comic_data["img"])
 
     def get_command(self):
         return "xkcd"
