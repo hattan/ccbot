@@ -1,14 +1,14 @@
-import urllib2
-import json
 import random
+from services.api_client import ApiClient
 
 class EarthMe:
+    api_client = None
+
+    def __init__(self):
+        self.api_client = ApiClient()
+
     def get_info(self):
-        url = "https://epic.gsfc.nasa.gov/api/images.php"
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', 'codecamp-bot')
-        resp = urllib2.urlopen(req)
-        data = json.loads(resp.read())
+        data = self.api_client.fetch("https://epic.gsfc.nasa.gov/api/images.php")
         image_data = random.choice(data)
         return image_data
 
