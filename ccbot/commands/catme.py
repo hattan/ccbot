@@ -1,5 +1,3 @@
-import urllib
-import json
 import random
 from services.api_client import ApiClient
 

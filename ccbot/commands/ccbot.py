@@ -1,12 +1,9 @@
 import datetime
-import urllib2
-import json
 import random
 import os
+from services.api_client import ApiClient
 
 class CCBot:
-    cats_url = "https://api.github.com/repos/flores/moarcats/contents/cats?ref=master"
-    cats_cache = None
     deny_response = [
         'No, {name}. I won''t {action}. I REFUSE',
         'Oh boy, here we go again. Why don''t you like me {name}? {action}? really .. REALLY?',
@@ -16,7 +13,11 @@ class CCBot:
     ]
     bully_id = os.environ.get('BULLY_USER_ID')
     bully_name =os.environ.get('BULLY_NAME')
+    api_client = None
 
+    def __init__(self):
+        self.api_client = ApiClient()
+        
     def get_channel_id(self):
         return "all"
 
@@ -62,11 +63,7 @@ class CCBot:
         return "https://www.socalcodecamp.com/schedule.aspx"
 
     def action_telljoke(self,args):
-        req = urllib2.Request("https://icanhazdadjoke.com/")
-        req.add_header('User-Agent', 'codecamp-bot')
-        req.add_header('Accept','text/plain')
-        resp = urllib2.urlopen(req)
-        data = resp.read()
+        data = self.api_client.fetch_raw("https://icanhazdadjoke.com/","text/plain")
         return data
 
     def action_debug_bully_id(self,args):
