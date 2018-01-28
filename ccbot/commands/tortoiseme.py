@@ -1,6 +1,3 @@
-import urllib2
-import json
-import random
 from services.reddit_client import RedditApiClient
 
 class TortoiseMe:
