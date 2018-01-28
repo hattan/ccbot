@@ -12,8 +12,9 @@ class ApiClient:
     def fetch_raw(self,url,headers=None):
         req = urllib2.Request(url)
         req.add_header('User-Agent', self.user_agent)
-        for key in headers:
-            req.add_header(key, headers[key])
+        if headers is not None:
+            for key in headers:
+                req.add_header(key, headers[key])
         resp = urllib2.urlopen(req)
         data = resp.read()
         return data

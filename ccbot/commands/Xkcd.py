@@ -1,19 +1,18 @@
-import urllib2
-import json
 import random
+from services.api_client import ApiClient
 
 class Xkcd:
-   
+    api_client = None
+
+    def __init__(self):
+        self.api_client = ApiClient()
+
     def get_channel_id(self):
         return "all"
 
     def fetch_info(self,comic_id = None):
         url = "https://xkcd.com/info.0.json" if comic_id is None else "https://xkcd.com/" + str(comic_id) + "/info.0.json"
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', 'codecamp-bot')
-        req.add_header('Accept','text/plain')
-        resp = urllib2.urlopen(req)
-        data = json.loads(resp.read())
+        data = self.api_client.fetch(url)
         return data
 
     def invoke(self, input, user):
