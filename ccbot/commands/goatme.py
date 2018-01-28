@@ -1,6 +1,7 @@
 import os
 import random
 from services.api_client import ApiClient
+from services.slack_response import SlackResponse
 
 class GoatMe:
     url = "https://api.imgur.com/3/gallery/r/babygoats"
@@ -23,9 +24,10 @@ class GoatMe:
                     self.cache.append(child['images'][0]['link'])
                 else:
                      self.cache.append(child['link'])
+
         image_url = random.choice(self.cache)
-        attachments = attachments = [{"title": image_url, "image_url": image_url}]
-        return None,attachments
+        
+        return SlackResponse.attachment(title=image_url,image_url=image_url)
 
     def get_command(self):
         return "goatme"
