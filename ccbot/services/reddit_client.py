@@ -1,10 +1,12 @@
-from api_client import ApiClient
 import random
+
+from api_client import ApiClient
+
 
 class RedditApiClient(ApiClient):
     use_cache = None
     cache = []
-    def __init__(self, url, use_cache=True):
+    def __init__(self, url='', use_cache=True):
         self.use_cache = use_cache
         self.url = url
 
