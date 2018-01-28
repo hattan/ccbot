@@ -10,7 +10,6 @@ class CatMe:
 
     def __init__(self):
         self.api_client = ApiClient()
-        print "invoked"
 
     def get_channel_id(self):
         return "all"
