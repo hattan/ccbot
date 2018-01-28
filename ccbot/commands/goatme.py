@@ -1,22 +1,23 @@
 import os
-import urllib2
-import json
 import random
+from services.api_client import ApiClient
 
 class GoatMe:
     url = "https://api.imgur.com/3/gallery/r/babygoats"
     imgur_key = os.environ.get('IMGUR_CLIENT_ID')
     cache = []
+    api_client = None
+
+    def __init__(self):
+        self.api_client = ApiClient()
+
     def get_channel_id(self):
         return "all"
 
     def invoke(self, command, user):
         if not self.cache:
-            req = urllib2.Request(self.url)
-            req.add_header('User-Agent', 'codecamp-bot')
-            req.add_header('Authorization','Client-ID ' + self.imgur_key)
-            resp = urllib2.urlopen(req)
-            data = json.loads(resp.read())
+            headers = {'Authorization' : 'Client-ID ' + self.imgur_key}
+            data = self.api_client.fetch(self.url,headers)
             for child in data['data']:
                 if 'images' in child:
                     self.cache.append(child['images'][0]['link'])

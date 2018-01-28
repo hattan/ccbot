@@ -63,7 +63,8 @@ class CCBot:
         return "https://www.socalcodecamp.com/schedule.aspx"
 
     def action_telljoke(self,args):
-        data = self.api_client.fetch_raw("https://icanhazdadjoke.com/","text/plain")
+        headers = {'Accept' : 'text/plain'}
+        data = self.api_client.fetch_raw("https://icanhazdadjoke.com/",headers)
         return data
 
     def action_debug_bully_id(self,args):
