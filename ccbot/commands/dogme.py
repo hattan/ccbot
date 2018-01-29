@@ -15,5 +15,4 @@ class DogMe():
         return None,attachments
         
     def get_command(self):
-        name = foo()
         return "dogme"
