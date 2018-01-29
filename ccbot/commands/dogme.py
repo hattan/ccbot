@@ -8,6 +8,7 @@ class DogMe():
         return "all"
 
     def invoke(self, command, user):
+        print self.reddit_client
         if self.reddit_client is None:
             self.reddit_client = RedditApiClient(self.url)
 
@@ -17,4 +18,5 @@ class DogMe():
 
     def get_command(self):
         return "dogme"
+
 
