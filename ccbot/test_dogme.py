@@ -2,6 +2,10 @@ from commands.dogme import DogMe
 from services.reddit_client import RedditApiClient
 from mock import MagicMock
 
+def test_dogme_url_is_puppies_subreddit():
+    dogme = DogMe()
+    assert dogme.url == "https://www.reddit.com/r/puppies.json"
+    
 def test_dogme_commandtext_is_dogme():
     dogme = DogMe()
     command_text = dogme.get_command()
