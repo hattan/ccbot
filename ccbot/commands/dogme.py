@@ -14,8 +14,6 @@ class DogMe():
         attachments = self.reddit_client.fetch()
         return None,attachments
         
-
     def get_command(self):
+        name = foo()
         return "dogme"
-
-
