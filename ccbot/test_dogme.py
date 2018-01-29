@@ -13,18 +13,16 @@ def test_dogme_available_in_all_channels():
     assert channel == "all"
 
 def test_dogme_invoke_calls_redditclient_fetch_attachment_returned():
-    dogme = DogMe()
     reddit_client = RedditApiClient("fakeurl")
     reddit_client.fetch = MagicMock(return_value=['test'])
+    dogme = DogMe()
     dogme.reddit_client=reddit_client
-
     text,attachments = dogme.invoke("dogme","fakeuser")
     assert attachments == ['test']   
 
 def test_dogme_invoke_calls_redditclient_fetch_text_is_none():
     reddit_client = RedditApiClient("fakeurl")
     reddit_client.fetch = MagicMock(return_value=['test'])
-
     dogme = DogMe()
     dogme.reddit_client=reddit_client
 
