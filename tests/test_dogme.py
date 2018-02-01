@@ -1,3 +1,6 @@
+import sys
+sys.path.append("ccbot")
+
 from ccbot.commands.dogme import DogMe
 from ccbot.services.reddit_client import RedditApiClient
 

@@ -16,7 +16,10 @@ Start bot:
 The bot should be up and running.
 
 Note: If you would like the bot to work in private channels, you need to invite the bot to the channel.
-  
+
+### Unit Tests
+Run tests by invoking "pytest" from the root for the project
+
 ### Adding new Commands
 Commands are automaticatlly loaded at startup. To add a new command, add a class in the commands folder. The class must include
 the following 3 method:
@@ -29,5 +32,8 @@ returns the channel ID where this command can execute. It can also be "all" for 
   
 * get_command(self):<Br/>
 Text used to invoke command. The input can contain other characters after the command text.
+
+
+
   
  
