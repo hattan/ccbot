@@ -1,4 +1,4 @@
-#from ccbot.services.reddit_client import RedditApiClient
+from ..services.reddit_client import RedditApiClient
 
 class DogMe():
     url = "https://www.reddit.com/r/puppies.json"
