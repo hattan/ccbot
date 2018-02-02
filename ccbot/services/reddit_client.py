@@ -10,7 +10,6 @@ class RedditApiClient(ApiClient):
 
     @memoize
     def get_data(self):
-        print "fetched"
         result = []
         data = ApiClient.fetch(self,self.url)
         for child in data['data']['children']:
