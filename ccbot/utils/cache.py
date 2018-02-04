@@ -1,3 +1,4 @@
+import datetime
 from functools import wraps
 
 def memoize(function):
@@ -28,4 +29,16 @@ def parameterized_memoize(input):
             rv = f(*args)
             return input + str(rv)
         return wrapper
-    return _parameterized_memoize    
+    return _parameterized_memoize   
+
+def timed_memoize(expires_on):
+    def _timed_memoize(function):
+        d = dict(f=memoize(function))
+        @wraps(d['f'])
+        def wrapper(*args):
+            now = datetime.datetime.now()
+            if now > expires_on:
+                d['f'] = memoize(function)
+            return d['f'](*args)
+        return wrapper
+    return _timed_memoize      
