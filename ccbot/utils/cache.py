@@ -11,3 +11,11 @@ def memoize(function):
             memo[args] = rv
             return rv
     return wrapper
+
+def wrapped_memorize(function):
+    f = memoize(function)
+    @wraps(f)
+    def wrapper(*args):
+        rv = f(*args)
+        return "hello=="  + str(rv)
+    return wrapper
