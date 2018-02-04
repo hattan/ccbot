@@ -12,10 +12,20 @@ def memoize(function):
             return rv
     return wrapper
 
-def wrapped_memorize(function):
+def wrapped_memoize(function):
     f = memoize(function)
     @wraps(f)
     def wrapper(*args):
         rv = f(*args)
         return "hello=="  + str(rv)
     return wrapper
+
+def parameterized_memoize(input):
+    def _parameterized_memoize(function):
+        f = memoize(function)
+        @wraps(f)
+        def wrapper(*args):
+            rv = f(*args)
+            return input + str(rv)
+        return wrapper
+    return _parameterized_memoize    
