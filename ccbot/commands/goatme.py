@@ -2,7 +2,7 @@ import os
 import random
 from services.api_client import ApiClient
 from services.slack_response import SlackResponse
-from utils.cache import memoize
+from utils.cache import *
 
 class GoatMe:
     url = "https://api.imgur.com/3/gallery/r/babygoats"
@@ -15,7 +15,7 @@ class GoatMe:
     def get_channel_id(self):
         return "all"
     
-    @memoize
+    @timed_memoize(minutes=30)
     def get_data(self):
         response = []
         headers = {'Authorization' : 'Client-ID ' + self.imgur_key}
