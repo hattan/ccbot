@@ -31,7 +31,8 @@ def parameterized_memoize(input):
         return wrapper
     return _parameterized_memoize   
 
-def timed_memoize(expires_on):
+def timed_memoize(minutes):
+    expires_on =  datetime.datetime.now() + datetime.timedelta(minutes=minutes)
     def _timed_memoize(function):
         d = dict(f=memoize(function))
         @wraps(d['f'])

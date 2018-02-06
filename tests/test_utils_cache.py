@@ -37,34 +37,28 @@ def test_timed_memoize_method_called_after_expiry_time():
     #do
     def foo(a):
         return uuid.uuid1()
-    duration =  1 #second
-    now = datetime.datetime.now()
-    expires_on =  now + datetime.timedelta(minutes=2)
-    f = timed_memoize(expires_on)(foo)
+    f = timed_memoize(2)(foo)
     
     #verify
     id = f(3)
     assert id == f(3)
 
-    five_minutes = datetime.timedelta(minutes=5)
-    target = now + five_minutes
+    target = datetime.datetime.now() + datetime.timedelta(minutes=5)
     with mock_datetime(target, datetime):
         assert id != f(3) #should no longer be cached
 
 def test_timed_memoize_method_not_called_before_expiry_time():
     #arrange
     def foo(a):
+        print "foo"
         return uuid.uuid1()
-    duration =  1 #second
-    now = datetime.datetime.now()
-    expires_on =  now + datetime.timedelta(minutes=10)
-    f = timed_memoize(expires_on)(foo)
+    f = timed_memoize(10)(foo)
     
     #act
     id = f(3)
 
     #assert
-    target = now + datetime.timedelta(minutes=5)
+    target = datetime.datetime.now() + datetime.timedelta(minutes=1)
     with mock_datetime(target, datetime):
         assert id == f(3) #should still be cached      
 
