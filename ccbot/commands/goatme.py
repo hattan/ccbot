@@ -20,6 +20,7 @@ class GoatMe:
         response = []
         headers = {'Authorization' : 'Client-ID ' + self.imgur_key}
         data = self.api_client.fetch(self.url,headers)
+        print data
         for child in data['data']:
             if 'images' in child:
                 response.append(child['images'][0]['link'])
