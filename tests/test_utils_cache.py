@@ -83,4 +83,22 @@ def test_timed_memoize_method_resets_expiry_time():
     with mock_datetime(target, datetime):
         assert id == f(3) #should  be cached    
 
+def test_timed_memoize_multiple_instances_should_not_collide():
+    #arrange
+    def foo(a):
+        return uuid.uuid1()
+    f = timed_memoize(10)(foo)
+    b = timed_memoize(2)(foo)
+    #act
+    fid = f(3)
+    bid = b(3)
+    #assert
+    target = datetime.datetime.now() + datetime.timedelta(minutes=11)
+    with mock_datetime(target, datetime):
+        assert fid != f(3) #should not be cached    
+
+    target = datetime.datetime.now() + datetime.timedelta(minutes=1)
+    with mock_datetime(target, datetime):
+        assert bid == b(3) #should  be cached   
+
     
