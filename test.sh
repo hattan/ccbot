@@ -1,1 +1,1 @@
-py.test --cov=ccbot tests 
+py.test --cov=ccbot --cov-report term-missing --cov-report annotate:cov_annotate tests 

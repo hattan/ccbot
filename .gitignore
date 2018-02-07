@@ -2,6 +2,7 @@
 #custom
 env
 .vscode
+cov_annotate
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

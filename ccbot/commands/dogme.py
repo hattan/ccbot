@@ -7,11 +7,16 @@ class DogMe():
     def get_channel_id(self):
         return "all"
 
-    def invoke(self, command, user):
+    def configure_api_client(self):
         if self.reddit_client is None:
             self.reddit_client = RedditApiClient(self.url)
 
-        attachments = self.reddit_client.fetch()
+    def fetch_data(self):
+        return self.reddit_client.fetch()
+
+    def invoke(self, command, user):
+        self.configure_api_client()
+        attachments = self.fetch_data()
         return None,attachments
         
     def get_command(self):
