@@ -41,4 +41,4 @@ def test_dogme_invoke_creates_new_reddit_client_if_it_is_None():
     dogme = DogMe()
     dogme.fetch_data = MagicMock(return_value=['test'])
     text,attachments = dogme.invoke("dogme","fakeuser")
-    assert attachments == ['test']   
+    assert dogme.reddit_client is not None 
