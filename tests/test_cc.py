@@ -8,7 +8,7 @@ from ccbot.commands.cc import CCBot
 from services.api_client import ApiClient
 from utils.cache import *
 from mock_datetime import mock_datetime 
-from mock import MagicMock
+from mock import MagicMock,patch
 
 def test_ccbot_commandtext_is_dogme():
     assert CCBot().get_command() == "ccbot"
@@ -97,7 +97,12 @@ def test_action_telljoke_calls_api_client_fetch():
     response = cc_bot.action_telljoke(None)
     assert response == joke
 
-#def test_action_telljoke_calls_api_client_fetch_with_accept_header():
+@patch('services.api_client.ApiClient.fetch_raw')
+def test_action_telljoke_calls_api_client_fetch_with_accept_header(mock_fetch_raw):
+    joke = 'ha ha, great joke!'
+    cc_bot = CCBot()
+    response = cc_bot.action_telljoke(None)
+    mock_fetch_raw.assert_called_with("https://icanhazdadjoke.com/",{'Accept' : 'text/plain'})
 
 def test_action_debug_bully_id_returns_bully_id():
     cc_bot = CCBot()
