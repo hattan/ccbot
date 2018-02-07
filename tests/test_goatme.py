@@ -8,7 +8,7 @@ from utils.cache import *
 from mock_datetime import mock_datetime 
 from mock import MagicMock
 
-def test_goatme_url_is_puppies_subreddit():
+def test_goatme_url_is_imgur_babbygoats():
     assert GoatMe().url == "https://api.imgur.com/3/gallery/r/babygoats"
     
 def test_goatme_commandtext_is_dogme():

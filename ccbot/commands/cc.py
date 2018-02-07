@@ -26,7 +26,7 @@ class CCBot:
         text = None
         command,action,args= self.parse_command(input)
         method_name = "action_" + action
-        if method_name in dir(CCBot):
+        if method_name in dir(self):
             method_to_call = getattr(self, method_name)
             result = method_to_call(args)
             text = result
@@ -59,7 +59,7 @@ class CCBot:
     def action_get_time(self,args):
         return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    def action_schedule(self,args):
+    def action_schedule(self,args=None):
         return "https://www.socalcodecamp.com/schedule.aspx"
 
     def action_telljoke(self,args):
