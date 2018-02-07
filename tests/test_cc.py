@@ -97,6 +97,18 @@ def test_action_telljoke_calls_api_client_fetch():
     response = cc_bot.action_telljoke(None)
     assert response == joke
 
+#def test_action_telljoke_calls_api_client_fetch_with_accept_header():
+
+def test_action_debug_bully_id_returns_bully_id():
+    cc_bot = CCBot()
+    result = cc_bot.action_debug_bully_id()
+    assert result == cc_bot.bully_id
+
+def test_action_debug_bully_id_returns_bully_name():
+    cc_bot = CCBot()
+    result = cc_bot.action_debug_bully_name()
+    assert result == cc_bot.bully_name
+
 
 
 

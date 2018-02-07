@@ -59,7 +59,7 @@ class CCBot:
     def action_get_time(self,args):
         return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    def action_schedule(self,args=None):
+    def action_schedule(self,args=[]):
         return "https://www.socalcodecamp.com/schedule.aspx"
 
     def action_telljoke(self,args):
@@ -67,9 +67,9 @@ class CCBot:
         data = self.api_client.fetch_raw("https://icanhazdadjoke.com/",headers)
         return data
 
-    def action_debug_bully_id(self,args):
+    def action_debug_bully_id(self,args=[]):
         return self.bully_id
 
-    def action_debug_bully_name(self,args):
+    def action_debug_bully_name(self,args=[]):
         return self.bully_name
 
