@@ -5,6 +5,7 @@ from utils.cache import memoize
 
 
 class RedditApiClient(ApiClient):
+
     def __init__(self, url='', use_cache=True):
         self.url = url
 
