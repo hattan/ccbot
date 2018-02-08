@@ -24,12 +24,6 @@ class RedditApiClient(ApiClient):
         image_url = random.choice(data)
         attachments = attachments = [{"title": image_url, "image_url": image_url}]
         return attachments
-   
-
-if __name__ == "__main__":
-    client = RedditApiClient("https://www.reddit.com/r/aww.json")
-    attachment = client.fetch()
-    print attachment
 
 
 
