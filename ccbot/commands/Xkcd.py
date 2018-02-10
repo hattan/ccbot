@@ -48,8 +48,3 @@ class Xkcd:
                 args.append(argument)
             count = count + 1
         return command,args
-
-if __name__ == "__main__":
-    xk = Xkcd()
-    text,attachments = xk.invoke("xkcd 614" ,"user")
-    print attachments
