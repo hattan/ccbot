@@ -19,7 +19,6 @@ class Xkcd:
     def invoke(self, input, user):
         info = self.fetch_info()
         last_comic_id = info["num"]
-
         command,args= self.parse_command(input)
         comic_id = None
         if(len(args) > 0):
