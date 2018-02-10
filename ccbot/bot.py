@@ -13,7 +13,6 @@ slack_client = SlackClient(os.environ.get('SLACK_CODE_CAMP_BOT_TOKEN'))
 
 def load_commands():
     current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-    print glob.glob(current_dir + "/commands/*.py")
     for file in glob.glob(current_dir + "/commands/*.py"):
         name = os.path.splitext(os.path.basename(file))[0]
  
