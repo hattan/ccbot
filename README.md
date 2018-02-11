@@ -39,6 +39,8 @@ returns the channel ID where this command can execute. It can also be "all" for 
 * get_command(self):<Br/>
 Text used to invoke command. The input can contain other characters after the command text.
 
+### Current Command List
+
 
 
   
