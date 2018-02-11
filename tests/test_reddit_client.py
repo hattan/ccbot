@@ -24,6 +24,16 @@ def test_get_data_extracts_images_from_reddit_response(fake_fetch):
     #assert
     assert data == ['fake_img','fake_img2'] 
 
+@patch('ccbot.services.api_client.ApiClient.fetch')
+def test_get_data_handles_missing_properties_in_response(fake_fetch):
+    #arrange
+    reddit = RedditApiClient("fake_url")
+    fake_fetch.return_value = {"error" : "somethingbad happened"}
+    #act
+    data = reddit.get_data()
+    #assert
+    assert data == [] 
+
 def test_fetch():
     #arrange
     reddit = RedditApiClient("fake_url")

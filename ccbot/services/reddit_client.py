@@ -12,12 +12,10 @@ class RedditApiClient(ApiClient):
     @memoize
     def get_data(self):
         result = []
-        data = ApiClient.fetch(self,self.url)
-        for child in data['data']['children']:
-            if 'preview' in child['data']:
-                images = child['data']['preview']['images']
-                result.append(images[0]['source']['url'])
-        return result
+        response = ApiClient.fetch(self,self.url)
+        data = response.get("data",{})
+        children = data.get("children",{})
+        return [child['data']['preview']['images'][0]['source']['url'] for child in children if 'preview' in child.get("data",{})]
 
     def fetch(self):
         data = self.get_data()
