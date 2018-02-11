@@ -19,7 +19,7 @@ class CatMe:
 
     def invoke(self, command, user):
         data = self.get_data()
-        image = random.choice(data)["name"]
+        image = random.choice(data).get("name","")
         image_url = "http://edgecats.net/cats/" + image
         return SlackResponse.attachment(title=image_url,image_url= image_url)
 
