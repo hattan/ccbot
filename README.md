@@ -1,8 +1,7 @@
-# ccbot
+# ccbot [![travis build for ccbut](https://api.travis-ci.org/hattan/ccbot.svg?branch=master)](https://travis-ci.org/hattan/ccbot)
+
 SoCal Code Camp Slack bot - https://www.socalcodecamp.com/
 
-### CI Build
-[![travis build for ccbut](https://api.travis-ci.org/hattan/ccbot.svg?branch=master)](https://travis-ci.org/hattan/ccbot)
 
 ### Installation
 
