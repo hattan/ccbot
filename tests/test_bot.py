@@ -277,13 +277,3 @@ def test_get_sleep_time_one_minute():
     result = get_sleep_time()
     #assert
     assert result == 1
-     
-
-
-
-
-    
-
-
-
-
