@@ -1,5 +1,5 @@
 # ccbot
-SoCal Code Camp Slack bot
+SoCal Code Camp Slack bot - https://www.socalcodecamp.com/
 
 ### Installation
 
