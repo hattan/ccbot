@@ -18,9 +18,9 @@ The bot should be up and running.
 Note: If you would like the bot to work in private channels, you need to invite the bot to the channel.
 
 ### Unit Tests
-Run tests:
+Run tests (from root of the project):
 
-    pytest #from the root of the project
+    pytest 
 
 ### Code Coverage
 
