@@ -12,5 +12,5 @@ before_install:
 
 script:
   - pytest
-  - cover.sh
+  - ./cover.sh
 
