@@ -17,15 +17,11 @@ class GoatMe:
     
     @timed_memoize(minutes=30)
     def get_data(self):
-        response = []
-        headers = {'Authorization' : 'Client-ID ' + self.imgur_key}
-        data = self.api_client.fetch(self.url,headers)
-        for child in data['data']:
-            if 'images' in child:
-                response.append(child['images'][0]['link'])
-            else:
-                response.append(child['link'])
-        return response
+        response = self.api_client.fetch(self.url, {'Authorization' : 'Client-ID ' + self.imgur_key})
+        data = response.get("data",{})
+        return [child['images'][0]['link'] if 'images' in child else child['link'] for child in data ]
+
+
         
     def invoke(self, command, user):
         data = self.get_data()
