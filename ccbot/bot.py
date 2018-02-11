@@ -11,6 +11,9 @@ BOT_NAME = 'ccbot'
 commands = {}
 slack_client = SlackClient(os.environ.get('SLACK_CODE_CAMP_BOT_TOKEN'))
 
+def is_command(handler_class):
+    return handler_class and inspect.isclass(handler_class) and str(handler_class).startswith("commands.")
+
 def load_commands():
     current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
     for file in glob.glob(current_dir + "/commands/*.py"):
@@ -20,9 +23,10 @@ def load_commands():
             continue
 
         module = importlib.import_module("." + name,package="commands")
+
         for member in dir(module):
             handler_class = getattr(module, member)
-            if handler_class and inspect.isclass(handler_class) and str(handler_class).startswith("commands."):
+            if is_command(handler_class):
                 commands[handler_class().get_command()]=handler_class()
                 
 def handle_command(input, channel, user):
