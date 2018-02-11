@@ -59,13 +59,19 @@ def parse_slack_output(slack_rtm_output):
 
     return None, None, None
 
+def running():
+    return True
+
+def get_sleep_time():
+    return 1 #second delay between reading from firehose
+
 def start_bot():
     load_commands()
 
-    READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
+    READ_WEBSOCKET_DELAY = get_sleep_time()
     if slack_client.rtm_connect():
         print(BOT_NAME + " connected and running!")
-        while True:
+        while running():
             command, channel, user = parse_slack_output(slack_client.rtm_read())
            
             if command and channel:
