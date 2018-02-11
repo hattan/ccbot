@@ -72,4 +72,3 @@ class CCBot:
 
     def action_debug_bully_name(self,args=[]):
         return self.bully_name
-

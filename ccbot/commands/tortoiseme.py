@@ -16,6 +16,3 @@ class TortoiseMe:
 
     def get_command(self):
         return "tortoiseme"
-
-
-

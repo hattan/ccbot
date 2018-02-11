@@ -7,7 +7,7 @@ from services.api_client import ApiClient
 from mock import MagicMock
 
 def test_catme_url_is_edgecats_github_repo_contents():
-    assert CatMe().cats_url == "https://api.github.com/repos/flores/moarcats/contents/cats?ref=master"
+    assert CatMe().url == "https://api.github.com/repos/flores/moarcats/contents/cats?ref=master"
 
 def test_catme_commandtext_is_catme():
     assert CatMe().get_command() == "catme"    

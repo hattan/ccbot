@@ -20,8 +20,6 @@ class GoatMe:
         response = self.api_client.fetch(self.url, {'Authorization' : 'Client-ID ' + self.imgur_key})
         data = response.get("data",{})
         return [child['images'][0]['link'] if 'images' in child else child['link'] for child in data ]
-
-
         
     def invoke(self, command, user):
         data = self.get_data()

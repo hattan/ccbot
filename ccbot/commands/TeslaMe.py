@@ -16,11 +16,6 @@ class TeslaMe:
 
     def get_command(self):
         return "teslame"
-
-
-
-
-
         
 
 

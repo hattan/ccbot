@@ -16,18 +16,22 @@ class EarthMe:
     def get_channel_id(self):
         return "all"
 
-    def invoke(self, command, user):
+    def get_data(self):
         image_data = self.get_info()
-        image_url = "https://epic.gsfc.nasa.gov/epic-archive/jpg/" + image_data['image'] + ".jpg"
-        lat = str(image_data['centroid_coordinates']['lat'])
-        lng = str(image_data['centroid_coordinates']['lon'])
+        return (image_data.get('image',None) , 
+                str(image_data['centroid_coordinates']['lat']), 
+                str(image_data['centroid_coordinates']['lon']),
+                image_data['caption'],
+                image_data['date'])
+
+    def invoke(self, command, user):
+        image, lat, lng , caption, date = self.get_data()
+        image_url = "https://epic.gsfc.nasa.gov/epic-archive/jpg/" + image + ".jpg"
         maps_url = "https://www.google.com/maps/@" + lat +  "," + lng + ",6z"
-        pretext = image_data['caption']
-        text = "Taken on " + image_data['date']
+        pretext = caption
+        text = "Taken on " + date
         author_name = lat + " " + lng + " (location map)"
         author_link = maps_url
-        attachments = attachments = [{"pretext": pretext, "text":  text , "image_url": image_url, "author_name": author_name, "author_link": author_link}]
-        
         return SlackResponse.attachment(pretext=pretext,text=text,image_url=image_url,author_name=author_name,author_link=author_link)
 
     def get_command(self):
