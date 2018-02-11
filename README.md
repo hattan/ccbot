@@ -40,8 +40,20 @@ returns the channel ID where this command can execute. It can also be "all" for 
 Text used to invoke command. The input can contain other characters after the command text.
 
 ### Current Command List
-
-
+* catme - shows a catgif from [Edgecats](http://edgecats.net/)
+* dogme - shows an image of a puppy
+* goatme - shows an image of a goat
+* tortoiseme - shows an image of a tortoise
+* aww - shows an image from [/r/aww](https://www.reddit.com/r/aww/)
+* teslame - shows an image of an [intergallatic spaceboat of light and wonder](http://theoatmeal.com/comics/tesla_model_s). Note: It's TeslaME not tesLAME.
+* earthme - shows an image of the earth.
+* xkcd - shows a random xkcd comic
+    * xkcd latest - shows the most recent xkcd comic
+    * xkcd [number] - shows an xkcd comic by it's id. eg "xkcd 221" (which is one of my favorites)
+* ccbot - generic ccbot command. ccbot must be invoked with a command in the form ccbot [command]. Commands are mapped to functions that start with "action_"
+   * ccbot tell_joke - grabs a dad joke and displays the text
+    
+ ![Image of ccbot invoking earthme and xkcd](https://i.imgur.com/Pol1L0l.png)
 
   
  
