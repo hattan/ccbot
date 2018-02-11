@@ -6,11 +6,9 @@ services:
   - docker
 
 before_install:
-    - docker build -t ccbot . 
-    - docker run ccbot /bin/sh -c "pytest"     
+    - docker build -t ccbot .   
     - docker run ccbot /bin/sh -c "./cover.sh"         
 
 script:
-  - pytest
   - ./cover.sh
 
