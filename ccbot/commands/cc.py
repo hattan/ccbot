@@ -16,11 +16,6 @@ class CCBot:
     bully_id = os.environ.get('BULLY_USER_ID')
     bully_name =os.environ.get('BULLY_NAME')
     api_client = None
-    sql_server = os.environ.get('sql_server')
-    sql_database = os.environ.get('sql_database')
-    sql_username = os.environ.get('sql_username')
-    sql_password = os.environ.get('sql_password')
-    sql_sql =os.environ.get('sql_sql')
 
     def __init__(self):
         self.api_client = ApiClient()
