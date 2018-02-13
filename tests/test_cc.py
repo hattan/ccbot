@@ -2,6 +2,7 @@ import uuid
 import sys
 import mock
 import os
+import pyodbc
 sys.path.append("ccbot")
 
 from ccbot.commands.cc import CCBot
@@ -113,6 +114,41 @@ def test_action_debug_bully_id_returns_bully_name():
     cc_bot = CCBot()
     result = cc_bot.action_debug_bully_name()
     assert result == cc_bot.bully_name
+
+@patch('os.environ.get')
+@patch('pyodbc.connect')
+def test_action_action_talk_count_calls_connect(fake_connect,fake_env_get):
+    fake_env_get.return_value = 'fake_conn_str'
+    fake_connect.return_value = FakeConnection()
+    cc_bot = CCBot()
+    result = cc_bot.action_talk_count()
+    fake_connect.assert_called_with('fake_conn_str')
+
+@patch('os.environ.get')
+@patch('pyodbc.connect')
+def test_action_action_talk_count_returns_count(fake_connect,fake_env_get):
+    fake_env_get.return_value = 'fake_conn_str'
+    fake_connect.return_value = FakeConnection()
+    cc_bot = CCBot()
+    result = cc_bot.action_talk_count()
+    assert result == '0 talks submitted for the next code camp.'
+
+class FakeConnection:
+    def cursor(self):
+        return FakeCursor()
+
+count = 0
+class FakeCursor():
+    def execute(self,sql):
+        return sql
+    def fetchone(self):
+        global count
+        if count < 1:
+            count = count + 1
+            return ['1234']
+        else:
+            return None
+
 
 
 

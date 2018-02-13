@@ -86,7 +86,7 @@ class CCBot:
         cursor = cnxn.cursor()
         cursor.execute(sql_sql)
         row = cursor.fetchone()
-        count = 0
+        count = '0'
         while row:
             count=str(row[0])
             row = cursor.fetchone()
