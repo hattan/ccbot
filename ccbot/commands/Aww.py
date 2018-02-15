@@ -8,7 +8,7 @@ class Aww:
         return "all"
 
     def invoke(self, command, user):
-        if self.reddit_client is None:
+        if not self.reddit_client:
             self.reddit_client = RedditApiClient(self.url)
 
         attachments = self.reddit_client.fetch()

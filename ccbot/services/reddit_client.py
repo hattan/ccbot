@@ -2,7 +2,7 @@ import random
 
 from api_client import ApiClient
 from utils.cache import memoize
-
+from slack_response import SlackResponse
 
 class RedditApiClient(ApiClient):
 
@@ -20,8 +20,8 @@ class RedditApiClient(ApiClient):
     def fetch(self):
         data = self.get_data()
         image_url = random.choice(data)
-        attachments = attachments = [{"title": image_url, "image_url": image_url}]
-        return attachments
+        text,attachment = SlackResponse.attachment(title=image_url,image_url=image_url)
+        return attachment
 
 
 
