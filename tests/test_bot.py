@@ -141,12 +141,21 @@ def test_parse_slack_output_returns_command_channel_user_from_rtm_output():
     assert channel == 'foo'
     assert user == 'bar'
 
+def api_call_side_effect(input):
+    if input == "users.list":
+        return {"members" : [{"id" : "1234", "profile" : {"display_name" : "fake_bot"}}]}
+    else:
+        return {"user_id" : "1234"} 
+
+
 @patch('ccbot.bot.load_commands')
 @patch('slackclient.SlackClient.rtm_connect')
-def test_start_bot_loads_commands(fake_rtm_connect,fake_load_commands):
+@patch('slackclient.SlackClient.api_call')
+def test_start_bot_loads_commands(fake_api_call,fake_rtm_connect,fake_load_commands):
     #arrange
     fake_load_commands.return_value = None
     fake_rtm_connect.return_value = False
+    fake_api_call.side_effect = api_call_side_effect
     #act
     start_bot()
     #assert
@@ -154,10 +163,12 @@ def test_start_bot_loads_commands(fake_rtm_connect,fake_load_commands):
 
 @patch('ccbot.bot.load_commands')
 @patch('slackclient.SlackClient.rtm_connect')
-def test_start_bot_prints_message_if_slack_client_cant_connect(fake_rtm_connect,fake_load_commands,capsys):
+@patch('slackclient.SlackClient.api_call')
+def test_start_bot_prints_message_if_slack_client_cant_connect(fake_api_call,fake_rtm_connect,fake_load_commands,capsys):
     #arrange
     fake_load_commands.return_value = None
     fake_rtm_connect.return_value = False
+    fake_api_call.side_effect = api_call_side_effect
     #act
     start_bot()
     #assert
@@ -166,10 +177,12 @@ def test_start_bot_prints_message_if_slack_client_cant_connect(fake_rtm_connect,
 
 @patch('ccbot.bot.load_commands')
 @patch('slackclient.SlackClient.rtm_connect')
-def test_start_bot_prints_message_if_slack_client_cant_connect(fake_rtm_connect,fake_load_commands,capsys):
+@patch('slackclient.SlackClient.api_call')
+def test_start_bot_prints_message_if_slack_client_cant_connect(fake_api_call,fake_rtm_connect,fake_load_commands,capsys):
     #arrange
     fake_load_commands.return_value = None
     fake_rtm_connect.return_value = False
+    fake_api_call.side_effect = api_call_side_effect    
     #act
     start_bot()
     #assert
@@ -182,12 +195,14 @@ def fake_runner():
     count = count + 1
     return count < 2
 
+
 @patch('ccbot.bot.running') 
 @patch('ccbot.bot.load_commands')
 @patch('slackclient.SlackClient.rtm_connect')
 @patch('slackclient.SlackClient.rtm_read')
 @patch('ccbot.bot.get_sleep_time')
-def test_start_bot_success_prints_connected_message(fake_get_sleep_time,fake_rtm_read,fake_rtm_connect,fake_load_commands,fake_running,capsys):
+@patch('slackclient.SlackClient.api_call')
+def test_start_bot_success_prints_connected_message(fake_api_call,fake_get_sleep_time,fake_rtm_read,fake_rtm_connect,fake_load_commands,fake_running,capsys):
     #arrange
     global count 
     count = 0
@@ -196,11 +211,12 @@ def test_start_bot_success_prints_connected_message(fake_get_sleep_time,fake_rtm
     fake_rtm_connect.return_value = True
     fake_get_sleep_time.return_value = 0.001    
     fake_rtm_read.return_value = [{'text' : 'test 123' , 'channel' : 'foo', 'user' : 'bar'}]
+    fake_api_call.side_effect = api_call_side_effect
     #act
     start_bot()
     #assert
     out, err = capsys.readouterr()
-    assert out == (BOT_NAME + " connected and running!\n")   
+    assert out == ("fake_bot connected and running!\n")   
 
 @patch('ccbot.bot.running')
 @patch('ccbot.bot.load_commands')
@@ -208,7 +224,8 @@ def test_start_bot_success_prints_connected_message(fake_get_sleep_time,fake_rtm
 @patch('slackclient.SlackClient.rtm_read')
 @patch('ccbot.bot.parse_slack_output')
 @patch('ccbot.bot.get_sleep_time')
-def test_start_bot_calls_parse_slack_output(fake_get_sleep_time,fake_parse_slack_output,fake_rtm_read,fake_rtm_connect,fake_load_commands,fake_running):
+@patch('slackclient.SlackClient.api_call')
+def test_start_bot_calls_parse_slack_output(fake_api_call,fake_get_sleep_time,fake_parse_slack_output,fake_rtm_read,fake_rtm_connect,fake_load_commands,fake_running):
     #arrange
     global count 
     count = 0
@@ -218,6 +235,7 @@ def test_start_bot_calls_parse_slack_output(fake_get_sleep_time,fake_parse_slack
     fake_rtm_connect.return_value = True
     fake_get_sleep_time.return_value = 0.001
     fake_rtm_read.return_value = [{'text' : 'test 123' , 'channel' : 'foo', 'user' : 'bar'}]
+    fake_api_call.side_effect = api_call_side_effect    
     #act
     start_bot()
     #assert
@@ -229,7 +247,8 @@ def test_start_bot_calls_parse_slack_output(fake_get_sleep_time,fake_parse_slack
 @patch('slackclient.SlackClient.rtm_read')
 @patch('ccbot.bot.handle_command')
 @patch('ccbot.bot.get_sleep_time')
-def test_start_bot_calls_handle_command(fake_get_sleep_time,fake_handle_command,fake_rtm_read,fake_rtm_connect,fake_load_commands,fake_running):
+@patch('slackclient.SlackClient.api_call')
+def test_start_bot_calls_handle_command(fake_api_call,fake_get_sleep_time,fake_handle_command,fake_rtm_read,fake_rtm_connect,fake_load_commands,fake_running):
     #arrange
     global count 
     count = 0
@@ -238,6 +257,7 @@ def test_start_bot_calls_handle_command(fake_get_sleep_time,fake_handle_command,
     fake_rtm_connect.return_value = True
     fake_get_sleep_time.return_value = 0.001
     fake_rtm_read.return_value = [{'text' : 'test 123' , 'channel' : 'foo', 'user' : 'bar'}]
+    fake_api_call.side_effect = api_call_side_effect  
     #act
     start_bot()
     #assert
@@ -250,7 +270,8 @@ def test_start_bot_calls_handle_command(fake_get_sleep_time,fake_handle_command,
 @patch('ccbot.bot.handle_command')
 @patch('time.sleep')
 @patch('ccbot.bot.get_sleep_time')
-def test_start_bot_time_sleep_called_with_expected_value(fake_get_sleep_time,fake_sleep,fake_handle_command,fake_rtm_read,fake_rtm_connect,fake_load_commands,fake_running):
+@patch('slackclient.SlackClient.api_call')
+def test_start_bot_time_sleep_called_with_expected_value(fake_api_call,fake_get_sleep_time,fake_sleep,fake_handle_command,fake_rtm_read,fake_rtm_connect,fake_load_commands,fake_running):
     #arrange
     global count 
     count = 0
@@ -259,6 +280,7 @@ def test_start_bot_time_sleep_called_with_expected_value(fake_get_sleep_time,fak
     fake_rtm_connect.return_value = True
     fake_get_sleep_time.return_value = 0.001
     fake_rtm_read.return_value = [{'text' : 'test 123' , 'channel' : 'foo', 'user' : 'bar'}]
+    fake_api_call.side_effect = api_call_side_effect      
     #act
     start_bot()
     #assert

@@ -7,7 +7,6 @@ import inspect
 import time
 from slackclient import SlackClient
 
-BOT_NAME = 'ccbot'
 commands = {}
 slack_client = SlackClient(os.environ.get('SLACK_CODE_CAMP_BOT_TOKEN'))
 
@@ -66,11 +65,15 @@ def get_sleep_time():
     return 1 #second delay between reading from firehose
 
 def start_bot():
+    users = slack_client.api_call("users.list")
+    bot_id = slack_client.api_call("auth.test")["user_id"]
+    bot_name = [user["profile"]["display_name"] for user in users.get("members",{}) if user["id"] == bot_id][0]
+
     load_commands()
 
     READ_WEBSOCKET_DELAY = get_sleep_time()
     if slack_client.rtm_connect():
-        print(BOT_NAME + " connected and running!")
+        print(bot_name + " connected and running!")
         while running():
             command, channel, user = parse_slack_output(slack_client.rtm_read())
            
