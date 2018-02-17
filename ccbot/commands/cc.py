@@ -35,7 +35,7 @@ class CCBot:
             text = result
         else:
             if user == self.bully_id:
-                result = random.choice(self.deny_response).replace('{name}',self.bully_name).replace('{action}',action)
+                result = random.choice(self.deny_response).format(name=self.bully_name, action=action)
                 text = result
 
         return SlackResponse.text(text)
