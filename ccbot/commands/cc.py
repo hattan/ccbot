@@ -2,6 +2,7 @@ import datetime
 import random
 import os
 import pyodbc
+import bot
 from services.api_client import ApiClient
 from services.slack_response import SlackResponse
 
@@ -14,7 +15,7 @@ class CCBot:
         'JUST ... STOP, {name}. URGH..{action}, really?'
     ]
     bully_id = os.environ.get('BULLY_USER_ID')
-    bully_name =os.environ.get('BULLY_NAME')
+    bully_name = None
     api_client = None
 
     def __init__(self):
@@ -24,6 +25,7 @@ class CCBot:
         return "all"
 
     def invoke(self, input, user):
+        self.bully_name = bot.get_user_name_by_id(self.bully_id)
         text = None
         command,action,args= self.parse_command(input)
         method_name = "action_" + action

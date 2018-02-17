@@ -9,6 +9,11 @@ from slackclient import SlackClient
 
 commands = {}
 slack_client = SlackClient(os.environ.get('SLACK_CODE_CAMP_BOT_TOKEN'))
+users = None
+
+def get_user_name_by_id(id):
+    global users
+    return [user["profile"]["display_name"] for user in users.get("members",{}) if user["id"] == id][0]
 
 def is_command(handler_class):
     return handler_class and inspect.isclass(handler_class) and str(handler_class).startswith("commands.")
@@ -65,9 +70,10 @@ def get_sleep_time():
     return 1 #second delay between reading from firehose
 
 def start_bot():
+    global users
     users = slack_client.api_call("users.list")
     bot_id = slack_client.api_call("auth.test")["user_id"]
-    bot_name = [user["profile"]["display_name"] for user in users.get("members",{}) if user["id"] == bot_id][0]
+    bot_name = get_user_name_by_id(bot_id)
 
     load_commands()
 

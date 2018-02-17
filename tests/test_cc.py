@@ -43,38 +43,48 @@ def test_ccbot_parse_command_parses_command_and_action_and_args():
     assert len(args) == 3
     assert args == ['1','2','3']
 
-def test_invoke_calls_corresponding_action_method():
+@patch('bot.get_user_name_by_id')
+def test_invoke_calls_corresponding_action_method(fake_get_user_name_by_id):
+    fake_get_user_name_by_id.return_value = "bob"
     cc_bot = CCBot()
     cc_bot.action_foo = MagicMock(return_value='b')
     text,attachments = cc_bot.invoke("ccbot foo", "fakeuser")
     assert text == "b"
 
-def test_invoke_returns_bully_response_if_user_is_bully_and_action_not_found():
+@patch('bot.get_user_name_by_id')
+def test_invoke_returns_bully_response_if_user_is_bully_and_action_not_found(fake_get_user_name_by_id):
+    fake_get_user_name_by_id.return_value = "bob"    
     cc_bot = CCBot()
     cc_bot.deny_response = ['bully response']
     text,attachments = cc_bot.invoke("ccbot boo", cc_bot.bully_id)
     assert text == "bully response"
 
-def test_invoke_returns_bully_response_with_bully_name():
+@patch('bot.get_user_name_by_id')
+def test_invoke_returns_bully_response_with_bully_name(fake_get_user_name_by_id):
+    fake_get_user_name_by_id.return_value = "bob"        
     cc_bot = CCBot()
-    bully_name = cc_bot.bully_name
     cc_bot.deny_response = ['bully is {name}']
     text,attachments = cc_bot.invoke("ccbot boo", cc_bot.bully_id)
+    bully_name = cc_bot.bully_name
     assert text == 'bully is ' + bully_name
 
-def test_invoke_returns_bully_response_with_action():
+@patch('bot.get_user_name_by_id')
+def test_invoke_returns_bully_response_with_action(fake_get_user_name_by_id):
+    fake_get_user_name_by_id.return_value = "bob"      
     cc_bot = CCBot()
     action = "marklar"
     cc_bot.deny_response = ['bully is trying to {action}']
     text,attachments = cc_bot.invoke("ccbot " + action, cc_bot.bully_id)
     assert text == ('bully is trying to %(action)s' % {'action' : action})
 
-def test_invoke_returns_bully_response_with_action_and_bully_name():
+@patch('bot.get_user_name_by_id')
+def test_invoke_returns_bully_response_with_action_and_bully_name(fake_get_user_name_by_id):
+    fake_get_user_name_by_id.return_value = "bob"        
     cc_bot = CCBot()
     action = "marklar"
-    bully_name = cc_bot.bully_name
     cc_bot.deny_response = ['bully {name} is trying to {action}']
     text,attachments = cc_bot.invoke("ccbot " + action, cc_bot.bully_id)
+    bully_name = cc_bot.bully_name    
     assert text == ('bully %(bully_name)s is trying to %(action)s' % {'action' : action, 'bully_name' : bully_name})
 
 #action tests
