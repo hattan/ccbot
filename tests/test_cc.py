@@ -2,7 +2,6 @@ import uuid
 import sys
 import mock
 import os
-import pyodbc
 sys.path.append("ccbot")
 
 from ccbot.commands.cc import CCBot
