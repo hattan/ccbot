@@ -1,7 +1,6 @@
 import datetime
 import random
 import os
-import pyodbc
 import bot
 from services.api_client import ApiClient
 from services.slack_response import SlackResponse
@@ -75,16 +74,3 @@ class CCBot:
 
     def action_debug_bully_name(self,args=[]):
         return self.bully_name
-    
-    def action_talk_count(self,args=[]):
-        conn_str = os.environ.get('sql_connection_string')
-        sql_sql =os.environ.get('sql_talk_count')
-        cnxn = pyodbc.connect(conn_str)
-        cursor = cnxn.cursor()
-        cursor.execute(sql_sql)
-        row = cursor.fetchone()
-        count = '0'
-        while row:
-            count=str(row[0])
-            row = cursor.fetchone()
-        return count + " talks submitted for the next code camp."
