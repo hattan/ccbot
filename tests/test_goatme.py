@@ -6,7 +6,7 @@ from ccbot.commands.goatme import GoatMe
 from services.api_client import ApiClient
 from utils.cache import *
 from mock_datetime import mock_datetime 
-from mock import MagicMock
+from mock import MagicMock,patch
 
 def test_goatme_url_is_imgur_babbygoats():
     assert GoatMe().url == "https://api.imgur.com/3/gallery/r/babygoats"
@@ -21,6 +21,7 @@ def test_goatme_invoke_calls_api_client_fetch_returns_url_from_link_if_no_images
     api_client = ApiClient()
     api_client.fetch = MagicMock(return_value={'data':[{'link':'test_url'}]})
     goat_me = GoatMe()
+    goat_me.imgur_key = "fake_imgur_key"
     goat_me.api_client=api_client
     text,attachments = goat_me.invoke("goatme","fakeuser")
     assert attachments == [{'image_url': 'test_url', 'title': 'test_url'}]  
@@ -29,6 +30,7 @@ def test_goatme_invoke_calls_api_client_fetch_returns_url_from_images_array_if_i
     api_client = ApiClient()
     api_client.fetch = MagicMock(return_value={'data':[{'link':'test_url','images' : [{'link':'test_url_2'}]}]})
     goat_me = GoatMe()
+    goat_me.imgur_key = "fake_imgur_key"
     goat_me.api_client=api_client
     text,attachments = goat_me.invoke("goatme","fakeuser")
     assert attachments == [{'image_url': 'test_url_2', 'title': 'test_url_2'}]
@@ -39,6 +41,7 @@ def test_goatme_invoke_caches_api_client_fetch_if_less_than_30_minutes():
     api_client = ApiClient()
     api_client.fetch = MagicMock(return_value={'data':[{'link':id}]})
     goat_me = GoatMe()
+    goat_me.imgur_key = "fake_imgur_key"
     goat_me.api_client=api_client
 
     #act
@@ -59,6 +62,7 @@ def test_goatme_invoke_calls_api_client_fetch_if_greater_than_30_minutes():
     api_client = ApiClient()
     api_client.fetch = MagicMock(return_value={'data':[{'link':id}]})
     goat_me = GoatMe()
+    goat_me.imgur_key = "fake_imgur_key"
     goat_me.api_client=api_client
 
     #act
