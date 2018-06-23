@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccbot
+  labels:
+    app: ccbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ccbot
+  template:
+    metadata:
+      labels:
+        app: ccbot
+    spec:
+      containers:
+      - name: ccbot-container
+        image: "ccbot:0.2"
+        imagePullPolicy: Never
+        env:
+        - name: SLACK_CODE_CAMP_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: ccbot-secrets
+              key: slack_token
