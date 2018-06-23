@@ -7,7 +7,7 @@ services:
 
 before_install:
     - docker build -t ccbot .   
-    - docker run ccbot /bin/sh -c "./cover.sh"         
+    - docker run --entrypoint=/bin/echo ccbot /bin/sh -c "./cover.sh"
 
 script:
   - ./cover.sh
