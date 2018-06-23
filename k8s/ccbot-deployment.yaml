@@ -24,3 +24,8 @@ spec:
             secretKeyRef:
               name: ccbot-secrets
               key: slack_token
+        - name: IMGUR_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: ccbot-secrets
+              key: imgur_client_id
