@@ -1,10 +1,11 @@
 import random
 import sys
+import os
 
 sys.path.append("ccbot")
 
 from ccbot.commands.TacoMe import TacoMe
-from ccbot.services.api_client import *
+# from ccbot.services.api_client import *
 from ccbot.services.slack_response import SlackResponse
 from mock import MagicMock, patch
 import pytest
@@ -46,9 +47,11 @@ class TacoMeTest(unittest.TestCase):
         for entry in ('title', 'image_url', 'text'):
             assert actual[1][0][entry]
 
-    def test_get_auth_value_returns_bearer(self):
+    @patch.object(os.environ, 'get')
+    def test_get_auth_value_returns_bearer(self,mock_get):
+        mock_get.return_value = '<API KEY>'
         result = TacoMe().get_auth_value()
-        assert result.startswith('Bearer ')
+        assert result == 'Bearer <API KEY>'
 
     def test_get_zipcode_extracts_5digits(self):
         cases = {
