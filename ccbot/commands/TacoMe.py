@@ -1,3 +1,4 @@
+# encoding: utf-8
 import re
 import os
 from services.api_client import ApiClient
@@ -47,12 +48,12 @@ class TacoMe:
         except URLError as ue:
             return SlackResponse.text(str(ue.args))
 
-        if (result['total'] == 0):
-            return SlackResponse.text('Sorry, no taco for ' + command)
-
         return self.create_slack_response(result)
 
     def create_slack_response(self, api_response):
+        if (api_response['total'] == 0):
+            return SlackResponse.text('No taco ¯\\_(ツ)_/¯')
+
         found = random.choice(api_response['businesses'])
         
         description = 'Rated %s by %s people, is %s meters away' % (

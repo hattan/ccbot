@@ -1,3 +1,4 @@
+# encoding: utf-8
 import random
 import sys
 import os
@@ -5,21 +6,24 @@ import os
 sys.path.append("ccbot")
 
 from ccbot.commands.TacoMe import TacoMe
-# from ccbot.services.api_client import *
+from ccbot.services.api_client import ApiClient
 from ccbot.services.slack_response import SlackResponse
 from mock import MagicMock, patch
 import pytest
 import unittest
+from urllib2 import *
 
 ZIP = '90405'
 COMMAND = 'tacome ' + ZIP
-API_RESPONSE_SAMPLE = {'businesses': [
-    {
-        'name': 'marklar', 
-        'image_url': 'https://taco.pic/1', 
-        'rating': 1, 
-        'review_count': 2, 
-        'distance': 3}]}
+API_RESPONSE_SAMPLE = {
+    'total': 1,
+    'businesses': [
+        {
+            'name': 'marklar',
+            'image_url': 'https://taco.pic/1',
+            'rating': 1,
+            'review_count': 2,
+            'distance': 3}]}
 
 
 class TacoMeTest(unittest.TestCase):
@@ -41,14 +45,30 @@ class TacoMeTest(unittest.TestCase):
         expected = "https://api.yelp.com/v3/businesses/search?term=taco&sort_by=distance&categories=foodtrucks&location=" + ZIP
 
         get_data.assert_called_with(expected)
-
+   
+    @patch.object(TacoMe, 'get_data')
+    def test_invoke_bad_url_error(self, get_data):
+        get_data.side_effect = URLError('nope!')
+        actual = TacoMe().invoke(COMMAND, "fake_user")
+        assert actual == SlackResponse.text("('nope!',)")
+        
+    @patch.object(TacoMe, 'get_data')
+    def test_invoke_bad_request_http_error(self, get_data):
+        get_data.side_effect = HTTPError('fake_url',400, 'nope!',None,None)
+        actual = TacoMe().invoke(COMMAND, "fake_user")
+        assert actual == SlackResponse.text('HTTP Error 400: nope!')
+        
     def test_create_slack_response_populates_attachment(self):
         actual = TacoMe().create_slack_response(API_RESPONSE_SAMPLE)
         for entry in ('title', 'image_url', 'text'):
             assert actual[1][0][entry]
 
+    def test_create_slace_response_zero_results(self):
+        actual = TacoMe().create_slack_response({'total':0})
+        assert actual[0] == 'No taco ¯\\_(ツ)_/¯'
+
     @patch.object(os.environ, 'get')
-    def test_get_auth_value_returns_bearer(self,mock_get):
+    def test_get_auth_value_returns_bearer(self, mock_get):
         mock_get.return_value = '<API KEY>'
         result = TacoMe().get_auth_value()
         assert result == 'Bearer <API KEY>'
@@ -70,3 +90,15 @@ class TacoMeTest(unittest.TestCase):
                 assert actual is None
             else:
                 assert actual == expected
+
+    def test_get_data_calls_api(self):
+        api_client = ApiClient()
+        api_client.fetch = MagicMock(return_value='yup')
+
+        target = TacoMe()
+        target.api_client = api_client
+
+        actual = target.get_data('dummy_url')
+
+        assert actual == 'yup'
+        target.api_client.fetch.assert_called_once()
