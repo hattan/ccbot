@@ -65,7 +65,9 @@ class TacoMe:
         return SlackResponse.attachment(
             title=found['name'],
             image_url=found['image_url'],
-            text=description)
+            text=description,
+            author_name='Taco details...',
+            author_link=found['url'])
 
     def get_command(self):
         return "tacome"

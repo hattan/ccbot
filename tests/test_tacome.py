@@ -23,7 +23,8 @@ API_RESPONSE_SAMPLE = {
             'image_url': 'https://taco.pic/1',
             'rating': 1,
             'review_count': 2,
-            'distance': 3}]}
+            'distance': 3,
+            'url': 'https://example.com/foo/bar'}]}
 
 
 class TacoMeTest(unittest.TestCase):
@@ -60,7 +61,7 @@ class TacoMeTest(unittest.TestCase):
         
     def test_create_slack_response_populates_attachment(self):
         actual = TacoMe().create_slack_response(API_RESPONSE_SAMPLE)
-        for entry in ('title', 'image_url', 'text'):
+        for entry in ('title', 'image_url', 'text', 'author_link', 'author_name'):
             assert actual[1][0][entry]
 
     def test_create_slace_response_zero_results(self):
