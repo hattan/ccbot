@@ -22,3 +22,4 @@ slackclient==1.1.0
 urllib3==1.22
 watchdog==0.8.3
 websocket-client==0.46.0
+requests==2.20.0

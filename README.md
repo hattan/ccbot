@@ -58,5 +58,6 @@ the following 3 method:
 * tacome [zip code] - shows a random yelp business categorized 'tacotrucks' with term 'taco'
 * ccbot - generic ccbot command. ccbot must be invoked with a command in the form ccbot [command]. Commands are mapped to functions that start with "action_"
   * ccbot tell_joke - grabs a dad joke and displays the text
+* whome - shows an image related to Dr. Who
 
 ![Image of ccbot invoking earthme and xkcd](https://i.imgur.com/Pol1L0l.png)
