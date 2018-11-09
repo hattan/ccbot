@@ -13,7 +13,6 @@ class CampMe:
     api_client = None
     USAGE_TEXT = 'Try: `campme next` or `campme now` or `campme speaker Bob Bobbernaugh`, or `campme sessions at 14:15` .'
     MANUAL = 'Help for the Code Camp Bot\n\n* `campme next` shows sessions starting next time slot.\n* `campme now` shows sessions in progress.\n* `campme speaker Marcel Marceau` shows sessions by the specified speakr. You may use first or last name only or both.\n* `campme sessions at 16:00` will return sessions starting at 4PM today. Use 24 hour clock 13:00 is 1PM, 14:00 is 2PM etc.'
-    
     URL = "https://www.socalcodecamp.com/v1/schedule/sessions"
 
     def __init__(self):
