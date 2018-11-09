@@ -44,7 +44,8 @@ the following 3 method:
 |`get_command(self)`|Text used to invoke command. The input can contain other characters after the command text.|
 
 ## Current Command List
-* campme &lt;verb&gt; - shows current code camp sessions and schedule. Try `campme now` for sessions in progress, `campme next` for sessions about to start.
+
+* campme &lt;verb&gt; - shows current code camp sessions and schedule. Try `campme now` for sessions in progress, `campme next` for sessions about to start, `campme speaker Bob Bobbernaugh` for session by Bob Bobbernaugh, `campme sessions at 14:15` to show sessions _today_ at 2:15PM (use 24 hour clock, hour and minutes only).
 * catme - shows a catgif from [Edgecats](http://edgecats.net/)
 * dogme - shows an image of a puppy
 * goatme - shows an image of a goat
