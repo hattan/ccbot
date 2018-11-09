@@ -14,7 +14,7 @@ class CampMe:
     USAGE_TEXT = 'Try: `campme next` or `campme now` or `campme speaker Bob Bobbernaugh`, or `campme sessions at 14:15` .'
     MANUAL = 'Help for the Code Camp Bot\n\n* `campme next` shows sessions starting next time slot.\n* `campme now` shows sessions in progress.\n* `campme speaker Marcel Marceau` shows sessions by the specified speakr. You may use first or last name only or both.\n* `campme sessions at 16:00` will return sessions starting at 4PM today. Use 24 hour clock 13:00 is 1PM, 14:00 is 2PM etc.'
     URL = "https://www.socalcodecamp.com/v1/schedule/sessions"
-
+    NO_MATCHES_FOUND = '¯\\_(ツ)_/¯ No sessions matching criteria'
     def __init__(self):
         self.api_client = ApiClient()
         self.api_headers = {
@@ -121,7 +121,6 @@ class CampMe:
             session_dt.day == clock.day
         )
 
-
     @staticmethod
     def nice(time_string):
         parsed = datetime.strptime(time_string, "%Y-%m-%dT%H:%M:%S")
@@ -131,6 +130,9 @@ class CampMe:
     def format_text(items, is_by_speaker = False):
         result = ''
 
+        if items is None or len(items) == 0:
+            return CampMe.NO_MATCHES_FOUND
+        
         # u'Room' (98644544):u'SLH 102'
         # u'SessionEnd' (98644880):u'2018-11-11T11:15:00'
         # u'SessionId' (98644352):u'a83dca4a-06f8-48b6-a398-e857c74d6a30'
