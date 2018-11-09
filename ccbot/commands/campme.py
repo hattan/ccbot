@@ -73,7 +73,7 @@ class CampMe:
             return [v for v in items if CampMe.is_by_speaker(v, regex)]
         
         if(verb[0] == 'sessions' and verb[1] == 'at' and len(verb) > 2):
-            return [v for v in items if CampMe.is_at_time(v, verb[2], datetime(2018,11,10) )]
+            return [v for v in items if CampMe.is_at_time(v, verb[2], datetime.now() )]
 
         return items
 
