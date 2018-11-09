@@ -12,7 +12,7 @@ from mock import MagicMock, patch
 import pytest
 import unittest
 from urllib2 import URLError, HTTPError
-from datetime import datetime
+from datetime import datetime, timedelta
 
 COMMAND = 'campme'
 COMMAND_WITH_VERB = 'campme now'
@@ -126,10 +126,45 @@ class CampMeTest(unittest.TestCase):
         clock = datetime(2018, 11, 10)
         stated_time = '14:15'
         cases = {
-            '2018-11-10T14:15:00': True, 
-            '2018-11-07T14:15:00': False, # wrong day wrt clock
-            '2018-11-10T08:30:00': False, # wrong time wrt start_time
+            '2018-11-10T14:15:00': True,
+            '2018-11-07T14:15:00': False,  # wrong day wrt clock
+            '2018-11-10T08:30:00': False,  # wrong time wrt start_time
         }
 
         for start, expected in cases.iteritems():
-            assert  CampMe.is_at_time({'SessionStart': start}, stated_time, clock) == expected
+            assert CampMe.is_at_time(
+                {'SessionStart': start}, stated_time, clock) == expected
+
+    def test_is_now(self):
+        assert CampMe.is_now(
+            {'SessionStart': '2000-01-01T00:00:00', 'SessionEnd': '2222-01-01T00:00:00'})
+
+    def test_is_next(self):
+        now = datetime.now()
+        two_minutes_from_now = now + timedelta(minutes=1)
+        two_hours_from_now = now + timedelta(hours=2)
+
+        assert CampMe.is_next(self._create_session_timeslot(two_minutes_from_now))
+
+        assert not CampMe.is_next(self._create_session_timeslot(now))
+        
+        assert not CampMe.is_next(self._create_session_timeslot(two_hours_from_now))
+
+    def _create_session_timeslot(self, dt):
+        result = {
+            'SessionStart': datetime.strftime(dt, "%Y-%m-%dT%H:%M:%S"),
+            'SessionEnd': datetime.strftime(dt + timedelta(hours=1, minutes=15), "%Y-%m-%dT%H:%M:%S")
+        }
+        return result
+
+    def test_nice(self):
+        assert CampMe.nice('2000-01-01T13:45:00') == 'Sat 13:45'
+
+    def test_format_text_when_no_items(self):
+        assert CampMe.format_text([]) == CampMe.NO_MATCHES_FOUND
+    
+    def test_format_when_items(self):
+        assert CampMe.format_text(SAMPLE_API_RESPONSE,False).startswith('Sun 11:15 - Sun 11:15')
+    
+    def test_format_when_by_speaker(self):
+        assert CampMe.format_text(SAMPLE_API_RESPONSE,True).startswith('*  Bob Bobberson: Awesome Code!  @ SLH 102 Sun 11:15')
