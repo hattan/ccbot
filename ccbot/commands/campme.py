@@ -71,6 +71,9 @@ class CampMe:
         if(verb[0] == 'speaker' and len(verb) > 1):
             regex = CampMe.build_regex(verb[1:])
             return [v for v in items if CampMe.is_by_speaker(v, regex)]
+        
+        if(verb[0] == 'sessions' and verb[1] == 'at' and len(verb) > 2):
+            return [v for v in items if CampMe.is_at_time(v, verb[2], datetime(2018,11,10) )]
 
         return items
 
@@ -103,6 +106,17 @@ class CampMe:
             regex.search(session['SpeakerFirstName']) != None
             or regex.search(session['SpeakerLastName']) != None
         )
+    
+    @staticmethod
+    def is_at_time(session, stated_time, clock):
+        session_dt = datetime.strptime(session.get('SessionStart'),"%Y-%m-%dT%H:%M:%S")
+        stated_dt = datetime.strptime(stated_time,"%H:%M")
+        return (
+            session_dt.hour == stated_dt.hour and
+            session_dt.minute == stated_dt.minute and
+            session_dt.day == clock.day
+        )
+
 
     @staticmethod
     def nice(time_string):

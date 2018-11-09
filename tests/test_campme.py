@@ -11,7 +11,8 @@ from ccbot.services.slack_response import SlackResponse
 from mock import MagicMock, patch
 import pytest
 import unittest
-from urllib2 import *
+from urllib2 import URLError, HTTPError
+from datetime import datetime
 
 COMMAND = 'campme'
 COMMAND_WITH_VERB = 'campme now'
@@ -78,7 +79,8 @@ class CampMeTest(unittest.TestCase):
             'campme now': ['now'],
             'campme   now': ['now'],
             'campme   next   ': ['next'],
-            'campme speaker bob bobbernaugh': ['speaker', 'bob', 'bobbernaugh']
+            'campme speaker bob bobbernaugh': ['speaker', 'bob', 'bobbernaugh'],
+            'campme sessions at 12:45': ['sessions', 'at', '12:45']
         }
 
         for command, expected in cases.iteritems():
@@ -105,7 +107,7 @@ class CampMeTest(unittest.TestCase):
             (['bob'], True),
             (['BoB'], True),
             (['bob', 'bobbernaugh'], True),
-            (['bob','jones'], True),
+            (['bob', 'jones'], True),
             (['bobbernaugh'], True),
             (['bobbernaugh', 'the great'], True),
             (['ogg'], False),
@@ -113,8 +115,21 @@ class CampMeTest(unittest.TestCase):
 
         for name_parts, expected in cases:
             r = CampMe.build_regex(name_parts)
-            assert expected == CampMe.is_by_speaker({'SpeakerFirstName': 'Bob', 'SpeakerLastName': 'Bobbernaugh'}, r)
+            assert expected == CampMe.is_by_speaker(
+                {'SpeakerFirstName': 'Bob', 'SpeakerLastName': 'Bobbernaugh'}, r)
 
     def test_build_regex(self):
         t = CampMe.build_regex(['alpha', 'beta'])
         assert t.pattern == "(\\balpha\\b|\\bbeta\\b)"
+
+    def test_is_at_time(self):
+        clock = datetime(2018, 11, 10)
+        stated_time = '14:15'
+        cases = {
+            '2018-11-10T14:15:00': True, 
+            '2018-11-07T14:15:00': False, # wrong day wrt clock
+            '2018-11-10T08:30:00': False, # wrong time wrt start_time
+        }
+
+        for start, expected in cases.iteritems():
+            assert  CampMe.is_at_time({'SessionStart': start}, stated_time, clock) == expected
