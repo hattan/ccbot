@@ -6,14 +6,14 @@ from services.api_client import ApiClient
 from services.slack_response import SlackResponse
 from utils.cache import timed_memoize
 from urllib2 import HTTPError, URLError
-from datetime import *
+from datetime import date, datetime, timedelta
 
-URL = "https://www.socalcodecamp.com/v1/schedule/sessions"
 
 
 class CampMe:
     api_client = None
-
+    USAGE_TEXT = 'Try: `campme next` or `campme now`.'
+    URL = "https://www.socalcodecamp.com/v1/schedule/sessions"
     def __init__(self):
         self.api_client = ApiClient()
         self.api_headers = {
@@ -35,10 +35,10 @@ class CampMe:
         verb = self.get_verb(command)
 
         if(verb is None):
-            return SlackResponse.text(r'Try: `campme next` or `campme now`.')
+            return SlackResponse.text(self.USAGE_TEXT)
 
         try:
-            result = self.get_data(URL)
+            result = self.get_data(self.URL)
         except HTTPError as he:
             return SlackResponse.text(str(he))
         except URLError as ue:
