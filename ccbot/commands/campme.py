@@ -9,22 +9,21 @@ from urllib2 import HTTPError, URLError
 from datetime import date, datetime, timedelta
 
 
-
 class CampMe:
     api_client = None
-    USAGE_TEXT = 'Try: `campme next` or `campme now`.'
+    USAGE_TEXT = 'Try: `campme next` or `campme now` or `campme speaker Bob Bobbernaugh`.'
     URL = "https://www.socalcodecamp.com/v1/schedule/sessions"
+
     def __init__(self):
         self.api_client = ApiClient()
         self.api_headers = {
             'Accept': 'application/json',
             'x-token': os.environ.get('SLACK_CODE_CAMP_BOT_CODECAMP_API_TOKEN')
         }
-        self.verb_regex = re.compile(r'^campme\s+(\w+)\s*$')
 
     def get_verb(self, command):
-        matched = self.verb_regex.match(command)
-        return matched.group(1) if matched else None
+        parts = command.split()
+        return parts[1:] if len(parts) > 1 else None
 
     @timed_memoize(minutes=30)
     def get_data(self, url):
@@ -53,7 +52,7 @@ class CampMe:
 
         subset = CampMe.filter_items(api_response, verb)
 
-        formatted = CampMe.format_text(subset)
+        formatted = CampMe.format_text(subset, verb[0] == 'speaker')
 
         return SlackResponse.attachment(
             title=verb,
@@ -63,11 +62,15 @@ class CampMe:
 
     @staticmethod
     def filter_items(items, verb):
-        if(verb == 'now'):
+        if(verb[0] == 'now'):
             return [v for v in items if CampMe.is_now(v)]
 
-        if(verb == 'next'):
+        if(verb[0] == 'next'):
             return [v for v in items if CampMe.is_next(v)]
+
+        if(verb[0] == 'speaker' and len(verb) > 1):
+            regex = CampMe.build_regex(verb[1:])
+            return [v for v in items if CampMe.is_by_speaker(v, regex)]
 
         return items
 
@@ -82,17 +85,32 @@ class CampMe:
 
     @staticmethod
     def is_next(session):
-        starts = datetime.strptime(session.get('SessionStart'), "%Y-%m-%dT%H:%M:%S")
+        starts = datetime.strptime(session.get(
+            'SessionStart'), "%Y-%m-%dT%H:%M:%S")
         now = datetime.now()
         return starts > now and starts < now + timedelta(hours=1, minutes=15)
 
-    @staticmethod 
+    @staticmethod
+    def build_regex(name_parts):
+        pattern = '(\\b'
+        pattern += '\\b|\\b'.join(name_parts)
+        pattern += '\\b)'
+        return re.compile(pattern, re.IGNORECASE)
+
+    @staticmethod
+    def is_by_speaker(session, regex):
+        return (
+            regex.search(session['SpeakerFirstName']) != None
+            or regex.search(session['SpeakerLastName']) != None
+        )
+
+    @staticmethod
     def nice(time_string):
         parsed = datetime.strptime(time_string, "%Y-%m-%dT%H:%M:%S")
         return parsed.strftime('%a %H:%M')
 
     @staticmethod
-    def format_text(items):
+    def format_text(items, is_by_speaker = False):
         result = ''
 
         # u'Room' (98644544):u'SLH 102'
@@ -105,17 +123,19 @@ class CampMe:
         isfirst = True
 
         for item in items:
-            if isfirst:
-                result += ('%s - %s\n================\n' %(
+            if (isfirst and not is_by_speaker):
+                result += ('%s - %s\n================\n' % (
                     CampMe.nice(item.get('SessionStart')),
                     CampMe.nice(item.get('SessionEnd'))))
-                isfirst = False 
-        
-            result = result + ('*  %s %s: %s  @  %s\n' % (
+                isfirst = False
+
+            result = result + ('*  %s %s: %s  @ %s %s\n' % (
                 item.get('SpeakerFirstName'),
                 item.get('SpeakerLastName'),
                 item.get('SessionName'),
-                item.get('Room')))
+                item.get('Room'),
+                CampMe.nice(item.get('SessionStart')) if is_by_speaker else ''
+                ))
 
         return result
 
@@ -124,4 +144,3 @@ class CampMe:
 
     def get_channel_id(self):
         return "all"
-

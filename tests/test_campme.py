@@ -75,9 +75,10 @@ class CampMeTest(unittest.TestCase):
     def test_get_verb_extracts_verb(self):
         cases = {
             'campme': None,
-            'campme now': 'now',
-            'campme   now': 'now',
-            'campme   now   ': 'now',
+            'campme now': ['now'],
+            'campme   now': ['now'],
+            'campme   next   ': ['next'],
+            'campme speaker bob bobbernaugh': ['speaker', 'bob', 'bobbernaugh']
         }
 
         for command, expected in cases.iteritems():
@@ -98,3 +99,22 @@ class CampMeTest(unittest.TestCase):
 
         assert actual == 'yup'
         target.api_client.fetch.assert_called_once()
+
+    def test_is_by_speaker(self):
+        cases = [
+            (['bob'], True),
+            (['BoB'], True),
+            (['bob', 'bobbernaugh'], True),
+            (['bob','jones'], True),
+            (['bobbernaugh'], True),
+            (['bobbernaugh', 'the great'], True),
+            (['ogg'], False),
+        ]
+
+        for name_parts, expected in cases:
+            r = CampMe.build_regex(name_parts)
+            assert expected == CampMe.is_by_speaker({'SpeakerFirstName': 'Bob', 'SpeakerLastName': 'Bobbernaugh'}, r)
+
+    def test_build_regex(self):
+        t = CampMe.build_regex(['alpha', 'beta'])
+        assert t.pattern == "(\\balpha\\b|\\bbeta\\b)"
