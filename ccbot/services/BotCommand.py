@@ -7,7 +7,8 @@ class BotCommand(object):
             channel_id: The name of the channel to register this bot to. Use the special constant 'all' to allow bot in all channels'
         """
 
-        self.command_name = command_name
+        self.command_name = command_name.lower()
+        
         self.channel_id = channel_id
 
     def get_command(self):
