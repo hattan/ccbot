@@ -44,8 +44,9 @@ def load_commands():
             handler_class = get_class(module, member)
 
             if is_command(handler_class):
-                commands[handler_class().get_command()] = handler_class()
-
+                instance = handler_class()
+                commands[instance.get_command()] = instance
+                print('Registered command ', str(instance), ' as ', instance.get_command())
 
 def handle_command(input, channel, user):
     if not input is '':
