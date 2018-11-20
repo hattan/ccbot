@@ -2,7 +2,7 @@ import random
 import sys
 sys.path.append("ccbot")
 
-from ccbot.commands.BotCommand import BotCommand
+from ccbot.services.BotCommand import BotCommand
 from ccbot.services.api_client import *
 from ccbot.services.reddit_client import RedditApiClient
 from services.slack_response import SlackResponse

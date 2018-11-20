@@ -2,7 +2,7 @@ import random
 import sys
 sys.path.append("ccbot")
 
-from ccbot.commands.TenorCommand import TenorCommand
+from ccbot.services.TenorCommand import TenorCommand
 from ccbot.services.api_client import *
 from ccbot.services.reddit_client import RedditApiClient
 from services.slack_response import SlackResponse
@@ -21,13 +21,26 @@ def test_search_term():
 
 
 def test_url():
-    assert TenorCommand.BASE_URL == 'https://api.tenor.com/v1/search?q='
+    assert TenorCommand.BASE_URL == 'https://api.tenor.com/v1/search?media_filter=minimal&q='
 
 
 def test_get_search_url():
-    assert get_target().get_search_url() == 'https://api.tenor.com/v1/search?q=dr. who'
+    assert get_target().get_search_url() == 'https://api.tenor.com/v1/search?media_filter=minimal&q=dr. who'
 
+@patch.object(TenorCommand, 'get_data')
+def test_invoke_with_no_data(get_data):
+    get_data.retrun_value = None
+    target = get_target()
 
-def test_invoke():
-    r = get_target().invoke('yo', 'bob')
-    assert r is not None
+    actual = target.invoke(None, None)
+
+    assert actual[0] == 'No results for dr. who'
+
+@patch.object(TenorCommand, 'get_data')
+def test_invoke_with_zero_results(get_data):
+    get_data.retrun_value = {'results': []}
+    target = get_target()
+
+    actual = target.invoke(None, None)
+
+    assert actual[0] == 'No results for dr. who'
