@@ -61,16 +61,19 @@ the following 3 method:
   * ccbot tell_joke - grabs a dad joke and displays the text
 * `whome` - shows an image related to __Dr. Who__.
 * `AlfMe` - A random __Alf__ GIF.
-* `BobMe` - A random __Bob__ GIF.
+* `BobMe` - A random __Spongebob Squarepants__ GIF.
 * `ElfMe` - A random __Elf__ GIF.
 * `HanukkahMe` - A random __Hanukkah__ GIF.
-* `KillMe` - A random __Kill__ GIF.
+* `KillMe` - A random __Kill Bill__ GIF.
 * `KwanzaaMe` - A random __Kwanzaa__ GIF.
-* `MadMaxMe` - A random __MadMax__ GIF.
-* `MarxMe` - A random __Marx__ GIF.
-* `StaloneMe` - A random __Stalone__ GIF.
+* `MadMaxMe` - A random __Mad Max__ GIF.
+* `MarxMe` - A random __Groucho Marx__ GIF.
+* `StaloneMe` - A random __Silvester Stalone__ GIF.
 * `StarTrekMe` - A random __StarTrek__ GIF.
-* `StoogeMe` - A random __Stooge__ GIF.
+* `StoogeMe` - A random __Three Stooges__ GIF.
+* `UrkleMe` - A random __Steve Urkle__ GIF.
+* `HelpMe` - Shows available commands. 
+  * `HelpMe [command]` - More details about an individual command options (if documented). Try `helpme urkleme`
 
 
 ![Image of ccbot invoking earthme and xkcd](https://i.imgur.com/Pol1L0l.png)
