@@ -8,8 +8,8 @@ class Xkcd:
     
     Options:
         
-        <id>: Shows specific comic strip by numeric id. Example: `xkcdme 221`
-        latest: Shows latest comic. Example: `xkcdme latest`
+        <id>: Shows specific comic strip by numeric id. Example: `xkcd 221`
+        latest: Shows latest comic. Example: `xkcd latest`
 
     """
     api_client = None
