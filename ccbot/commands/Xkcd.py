@@ -3,6 +3,15 @@ from services.api_client import ApiClient
 from services.slack_response import SlackResponse
 
 class Xkcd:
+    """
+    xkcd [<id>|latest]
+    
+    Options:
+        
+        <id>: Shows specific comic strip by numeric id. Example: `xkcd 221`
+        latest: Shows latest comic. Example: `xkcd latest`
+
+    """
     api_client = None
 
     def __init__(self):
