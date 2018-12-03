@@ -1,6 +1,7 @@
 
 #custom
 env
+dist
 .vscode
 cov_annotate
 
