@@ -44,3 +44,11 @@ def test_invoke_details(get_details):
     get_target().invoke('helpme marklar',None)
 
     get_details.assert_called_with('marklar')
+
+@patch.object(HelpMe, 'get_listing')
+def test_invoke_just_helpme(get_listing):
+    get_listing.return_value = 'listing'
+
+    text, attachments = get_target().invoke('helpme',None)
+
+    assert text == 'listing'
