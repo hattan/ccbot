@@ -3,6 +3,7 @@ import random
 import sys
 import os
 import urllib2
+import copy
 sys.path.append("ccbot")
 
 from ccbot.commands.campme import CampMe
@@ -14,9 +15,12 @@ import unittest
 from urllib2 import URLError, HTTPError
 from datetime import datetime, timedelta
 
+TODAY = "%02d" % datetime.now().day
+
 COMMAND = 'campme'
 COMMAND_WITH_VERB = 'campme now'
-
+COMMAND_FOR_HELP = 'campme help'
+COMMAND_SESSIONS_AT = 'campme sessions at 11:15'
 SAMPLE_API_RESPONSE = [{
     'Room': 'SLH 102',
     'SessionEnd': '2018-11-11T11:15:00',
@@ -43,6 +47,14 @@ class CampMeTest(unittest.TestCase):
         result = get_target().invoke(COMMAND, "fake_user")
         assert result[0][0:] == CampMe.USAGE_TEXT
 
+    def test_invoke_help_returns_doc(self):
+        text, attachments = get_target().invoke(COMMAND_FOR_HELP, None)
+        assert text == CampMe.MANUAL
+
+    def test_invoke_with_next(self):
+        text, attachments = get_target().invoke(COMMAND + ' next', None)
+        assert 'No sessions matching criteria' in attachments[0]['text']
+
     @patch.object(CampMe, 'get_data')
     def test_invoke_calls_get_data(self, get_data):
         get_data.return_value = SAMPLE_API_RESPONSE
@@ -50,6 +62,17 @@ class CampMeTest(unittest.TestCase):
         target.invoke(COMMAND_WITH_VERB, "fake_user")
 
         get_data.assert_called_with(target.URL)
+
+    @patch.object(CampMe, 'get_data')
+    def test_invoke_sessions_at(self, get_data):
+        sessions = copy.deepcopy(SAMPLE_API_RESPONSE)
+        sessions[0]['SessionStart'] = "2018-11-%02dT11:15:00" % datetime.now().day
+        get_data.return_value = sessions
+        target = get_target()
+
+        _, attachments = target.invoke(COMMAND_SESSIONS_AT, None)
+
+        assert attachments[0]['author_name'] == 'Code Camp Bot'
 
     @patch.object(CampMe, 'get_data')
     def test_invoke_io_error(self, get_data):
@@ -144,11 +167,13 @@ class CampMeTest(unittest.TestCase):
         two_minutes_from_now = now + timedelta(minutes=1)
         two_hours_from_now = now + timedelta(hours=2)
 
-        assert CampMe.is_next(self._create_session_timeslot(two_minutes_from_now))
+        assert CampMe.is_next(
+            self._create_session_timeslot(two_minutes_from_now))
 
         assert not CampMe.is_next(self._create_session_timeslot(now))
-        
-        assert not CampMe.is_next(self._create_session_timeslot(two_hours_from_now))
+
+        assert not CampMe.is_next(
+            self._create_session_timeslot(two_hours_from_now))
 
     def _create_session_timeslot(self, dt):
         result = {
@@ -162,9 +187,16 @@ class CampMeTest(unittest.TestCase):
 
     def test_format_text_when_no_items(self):
         assert CampMe.format_text([]) == CampMe.NO_MATCHES_FOUND
-    
+
     def test_format_when_items(self):
-        assert CampMe.format_text(SAMPLE_API_RESPONSE,False).startswith('Sun 11:15 - Sun 11:15')
-    
+        assert CampMe.format_text(SAMPLE_API_RESPONSE, False).startswith(
+            'Sun 11:15 - Sun 11:15')
+
     def test_format_when_by_speaker(self):
-        assert CampMe.format_text(SAMPLE_API_RESPONSE,True).startswith('*  Bob Bobberson: Awesome Code!  @ SLH 102 Sun 11:15')
+        assert CampMe.format_text(SAMPLE_API_RESPONSE, True).startswith(
+            '*  Bob Bobberson: Awesome Code!  @ SLH 102 Sun 11:15')
+    
+    def test_filter_items_speaker(self):
+        actual =  CampMe.filter_items(SAMPLE_API_RESPONSE, ('speaker','Dwain', 'Bobberson'))[0]
+        
+        assert actual['SpeakerLastName'] == 'Bobberson'
